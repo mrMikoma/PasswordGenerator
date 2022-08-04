@@ -63,8 +63,16 @@ def testPrint(name):
 def generatePassword():
     print("\nGenerating password...")
     password = []
+    length = 0
 
-    lenght = int(ent_length.get())
+    try:
+        length = int(ent_length.get())
+        if (length < 4):
+            print(f'Password length is too short. Please, try again...')
+            return(0)
+
+    except ValueError:
+        print("Could not convert data to an integer. Please, try again...")
 
     indexArr = [0, 0, 0, 0]  # [lower, upper, number, special] Meanings: 0=not required, 1=required, 2=included
     # if (input(f'Lowercase characters (x): ') == 'x'):
@@ -80,12 +88,16 @@ def generatePassword():
 
     indexed = Indexes(indexArr[0], indexArr[1], indexArr[2], indexArr[3])
 
+    if indexArr == [0, 0, 0, 0]:
+        print(f'Your password is not possible! Please, try again...')
+        return (0)
+
     while (True):
         # Randomize character type t
-        t = random.randint(0, lenght - 1)
+        t = random.randint(0, length - 1)
 
         # Break loop if ready
-        if len(password) == lenght:
+        if len(password) == length:
             # Check current password
             password = checkPassword(password, indexed)
             break
@@ -118,7 +130,7 @@ def generatePassword():
             if (indexed.getSpecial() == 1):
                 indexed.setSpecial(2)
 
-    return (password)
+    return (1)
 
 
 def checkPassword(password, indexes):
@@ -182,7 +194,7 @@ def checkPassword(password, indexes):
 
     printPassword(password)
 
-    return (0)
+    return (1)
 
 def printPassword(pw):
     print(f"\nAnd here is your password: ", end='')
@@ -203,17 +215,20 @@ if __name__ == '__main__':
     # Set up the window
     window = tk.Tk()
     window.title("Password generator")
-    window.resizable(width=False, height=False)
+    window.resizable(width=True, height=False)
+    window.geometry("350x60")
 
     # Create the length entry frame with an Entry
     # widget and label in it
     frm_entry = tk.Frame(master=window)
-    lbl_title = tk.Label(master=frm_entry, text="Password generator")
     ent_length = tk.Entry(master=frm_entry, width=10)
     lbl_pw_length = tk.Label(master=frm_entry, text="Password length:")
     lbl_password = tk.Label(master=window, text="")
 
-    # Layout the temperature Entry and Label in frm_entry
+    # Create a title for application
+    lbl_title = tk.Label(master=frm_entry, text="Password generator")
+
+    # Layout the length Entry and Label in frm_entry
     # using the .grid() geometry manager
     lbl_title.grid(row=0, column=0, sticky="w")
     ent_length.grid(row=1, column=1, sticky="e")
@@ -234,48 +249,7 @@ if __name__ == '__main__':
     # Run the application
     window.mainloop()
 
-    # Test
-    name = 'mrMikoma'
-    testPrint(name)
-
-    # VARIABLES
-    length = 0
-    while (True):
-        try:
-            length = int(input(f'Give password length: '))
-            if (length < 4):
-                print(f'Password length is too short. Please, try again...')
-                continue
-            break
-        except ValueError:
-            print("Could not convert data to an integer. Please, try again...")
-
-    # Generating password
-    while (True):
-        indexArr = [0, 0, 0, 0]  # [lower, upper, number, special] Meanings: 0=not required, 1=required, 2=included
-        # if (input(f'Lowercase characters (x): ') == 'x'):
-        indexArr[0] = 1
-        # if (input(f'Uppercase characters (x): ') == 'x'):
-        indexArr[1] = 1
-        # if (input(f'Number characters (x): ') == 'x'):
-        indexArr[2] = 1
-        # if (input(f'Special characters (x): ') == 'x'):
-        indexArr[3] = 1
-        # else:
-        #    indexArr[3] = 0
-
-        indexed = Indexes(indexArr[0], indexArr[1], indexArr[2], indexArr[3])
-
-        if indexArr == [0, 0, 0, 0]:
-            print(f'Your password is not possible! Please, try again...')
-
-        else:
-            password = generatePassword(length, indexed)
-            break
-
     # Ending program
-    printPassword(password)
     print(f'\n\nThank you for using this program! :)')
-
 
 # EOF
