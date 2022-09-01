@@ -1,8 +1,10 @@
-# This is a simple Python script for generating random passwords
+# This is a simple Python script for generating randomised passwords
 # compiled by mrMikoma
 
 # Thanks to
 # - https://www.pythontutorial.net/tkinter/tkraise/
+# - https://realpython.com/python-gui-tkinter/
+# - https://realpython.com/courses/python-data-classes/
 
 # PS. Cluster ry color: #d4202c
 
@@ -27,7 +29,7 @@ class App(tk.Tk):
 # MAIN
 if __name__ == '__main__':
     # Starting program
-    print(f'\nHi, this is a really simple application for generating random password.')
+    print(f'\nHi, this is a really simple application for generating random password.\n')
 
     # Running program
     app = App()
@@ -35,6 +37,6 @@ if __name__ == '__main__':
     app.mainloop()
 
     # Ending program
-    print(f'\n\nThank you for using this program! :)')
+    print(f'\nThank you for using this program! :)')
 
-# EOF
+# eof
