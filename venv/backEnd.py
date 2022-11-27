@@ -13,7 +13,6 @@ characters_upper = string.ascii_uppercase
 characters_special = string.punctuation
 
 
-
 @dataclass
 class Options:
     lenght: int  = 16
