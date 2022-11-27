@@ -9,7 +9,7 @@
 # PS. Cluster ry color: #d4202c
 
 import tkinter as tk
-from optionsFrame import OptionsFrame
+from frontEnd import OptionsFrame
 
 """
 Improvement ideas:
@@ -23,7 +23,7 @@ class App(tk.Tk):
         super().__init__()
 
         self.title(f'Password Generator')
-        self.geometry('350x120')
+        self.geometry('350x140')
         self.resizable(False, False)
 
 # MAIN
