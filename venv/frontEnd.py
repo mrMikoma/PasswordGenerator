@@ -5,7 +5,6 @@ from tkinter.messagebox import showerror
 import random
 import string
 import backEnd
-from dataclasses import replace
 
 
 # OPTIONSFRAME for different options
@@ -15,7 +14,7 @@ class OptionsFrame(ttk.LabelFrame):
         self['text'] = 'Options'
 
         # Initializing options
-        self.opt = backEnd.Options(0, 0, 0, 0, 0) #(lenght, lower, upper, number, special)
+        self.opt = backEnd.Options() #(lenght, lower, upper, number, special)
 
         # Initializing check buttons
         self.selected_lower = tk.IntVar()
@@ -27,7 +26,7 @@ class OptionsFrame(ttk.LabelFrame):
             self,
             text='Lowercase',
             variable=self.selected_lower,
-            command=lambda: backEnd.replace(self.opt, lower=self.selected_lower.get()))\
+            command=lambda: print(f'Lower is set to {self.selected_lower.get()}'))\
             .grid(column=0, row=0, padx=5, pady=5)
 
         cbtn_upper = tk.Checkbutton(
@@ -53,7 +52,7 @@ class OptionsFrame(ttk.LabelFrame):
 
         self.grid(column=0, row=1, padx=5, pady=5, sticky='ew')
 
-        # save_button
+        # Save button for options
         self.save_button = ttk.Button(self, text='Save')
         self.save_button.grid(column=0, row=1, sticky='ew')
         self.save_button.configure(command= lambda: self.save_options() )
@@ -74,12 +73,20 @@ class OptionsFrame(ttk.LabelFrame):
         frame.tkraise()
 
     def save_options(self):
-        replace(self.opt, lower=self.selected_lower.get())
-        replace(self.opt, upper=self.selected_upper.get())
-        replace(self.opt, number=self.selected_number.get())
-        replace(self.opt, special=self.selected_special.get())
+        # Declaring variables
+        print(f'\nLOWER read: {self.selected_lower.get()}')  # debug
+        opt_new = backEnd.Options(self.opt.lenght,
+                                  self.selected_lower.get(),
+                                  self.selected_upper.get(),
+                                  self.selected_number.get(),
+                                  self.selected_special.get(),
+        )
+        self.opt = opt_new
 
-        print(f'LoWer: {self.selected_lower.get()}') # debug
+        print(f'LOWER saved as: {self.opt.lower}')  # debug
+
+        self.change_frame()
+
         print(f'\nOptions saved successfully!\n')
 
 
@@ -91,14 +98,11 @@ class PasswordFrame(ttk.Frame):
 
         self.unit_from = unit_from
         self.converter = converter
-        self.opt = opt
-
-        print(f'LÖÖVER: {self.opt.lower}')  # debug
 
         # field options
         options = {'padx': 5, 'pady': 0}
 
-        # temperature label
+        # lenght label
         self.temperature_label = ttk.Label(self, text=self.unit_from)
         self.temperature_label.grid(column=0, row=0, sticky='w',  **options)
 
@@ -111,7 +115,7 @@ class PasswordFrame(ttk.Frame):
         # generate_button
         self.generate_button = ttk.Button(self, text='\N{RIGHTWARDS BLACK ARROW}')
         self.generate_button.grid(column=2, row=0, sticky='w', **options)
-        self.generate_button.configure(command=self.generate)
+        self.generate_button.configure(command= lambda: self.generate(opt) )
 
         # result_label
         self.result_label = ttk.Label(self)
@@ -120,38 +124,35 @@ class PasswordFrame(ttk.Frame):
         # add padding to the frame and show it
         self.grid(column=0, row=0, padx=5, pady=5, sticky="nsew")
 
-    def generate(self):
+    def generate(self, opt):
         print("\nGenerating password...") #debug
 
+        # Check options
         try:
             # Get options
-            self.opt.lenght = int(self.temperature.get())
+            opt.lenght = int(self.temperature.get())
 
+            print(f'Lenght is {opt.lenght}') # debug
 
+            print(f'LOWER: {opt.lower}') # debug
 
+            print(f'UPPER: {opt.upper}')  # debug
 
+            print(f'NUMBER: {opt.number}')  # debug
 
-            print(f'Lenght is {self.opt.lower}') # debug
-
-            print(f'LOWER: {self.opt.lower}') # debug
-
-            print(f'UPPER: {self.opt.upper}')  # debug
-
-            print(f'NUMBER: {self.opt.number}')  # debug
-
-            print(f'SPECIAL: {self.opt.special}')  # debug
+            print(f'SPECIAL: {opt.special}')  # debug
 
             # Error handling
-            if (self.opt.lenght < 4):
+            if (opt.lenght < 4):
                 print(f'Password length is too short. Please, try again...')
                 showerror(title='Error', message='Password length is too short. Please, try again...')
 
-            elif self.opt.lower != 1:
+            elif opt.lower != 1:
                 print(f'This password is not possible. Please, try again... :)))')
                 showerror(title='Error', message='This password is not possible. Please, try again... :)))')
 
             else:
-                result = PasswordGenerator.generatePassword(self)
+                result = backEnd.generatePassword(opt)
                 self.result_label.config(text=result)
         except ValueError as error:
             showerror(title='Error', message=error)

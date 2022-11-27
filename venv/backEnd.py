@@ -16,138 +16,132 @@ characters_special = string.punctuation
 
 @dataclass
 class Options:
-    lenght: int = 0
-    lower: int = 0
-    upper: int = 0
-    number: int = 0
+    lenght: int  = 16
+    lower: int  = 1
+    upper: int = 1
+    number: int = 1
     special: int = 0
 
 
-class PasswordGenerator:
-    def generatePassword(self):
-        print("\nGenerating password...")
-        password = []
-        i = 0  # debug
+def generatePassword(opt):
+    print("\nGenerating password...")
+    password = []
+    includeList = [opt.lower,
+                   opt.upper,
+                   opt.number,
+                   opt.special]
+    i = 0  # debug
 
-        while (True):
-            # Randomize character type t
-            t = random.randint(0, self.lenght - 1)
+    while True:
+        # Randomize character type t
+        t = random.randint(0, opt.lenght - 1)
 
-            # Break loop if ready
-            if len(password) == self.lenght:
-                # Check current password
-                # checkPassword(password, indexed)
-                return (password)
+        # Break loop if ready
+        if len(password) == opt.lenght:
+            # Check current password                # NOTICE and fix!
+            # checkPassword(password, indexed)      # NOTICE and fix!
+            return password
 
-            # Generate lowercase character
-            if t == 0 and (self.indexes.getLower() in range(1, 3)):
-                password.append(characters_lower[random.randint(0, len(characters_lower) - 1)])
-                print('Lowercase character')
-                if (self.indexes.getLower() == 1):
-                    self.indexes.setLower(2)
+        # Generate lowercase character
+        if t == 0 and (opt.lower in range(1, 3)):
+            password.append(characters_lower[random.randint(0, len(characters_lower) - 1)])
+            print('Lowercase character')
+            if (opt.lenght == 1):
+                includeList[0] = 2
 
-            # Generate uppercase character
-            elif t == 1 and (self.indexes.getUpper() in range(1, 3)):
-                password.append(characters_upper[random.randint(0, len(characters_upper) - 1)])
-                print('Uppercase character')
-                if (self.indexes.getUpper() == 1):
-                    self.indexes.setUpper(2)
+        # Generate uppercase character
+        elif t == 1 and (opt.upper in range(1, 3)):
+            password.append(characters_upper[random.randint(0, len(characters_upper) - 1)])
+            print('Uppercase character')
+            if (opt.upper == 1):
+                includeList[1] = 2
 
-            # Generate number
-            elif t == 2 and (self.indexes.getNumber() in range(1, 3)):
-                password.append(numbers[random.randint(0, len(numbers) - 1)])
-                print('Number')
-                if (self.indexes.getNumber() == 1):
-                    self.indexes.setNumber(2)
+        # Generate number
+        elif t == 2 and (opt.number in range(1, 3)):
+            password.append(numbers[random.randint(0, len(numbers) - 1)])
+            print('Number')
+            if (opt.number == 1):
+                includeList[2] = 2
 
-            # Generate special character
-            elif t == 3 and (self.indexes.getSpecial() in range(1, 3)):
-                password.append(characters_special[random.randint(0, len(characters_special) - 1)])
-                print('Special character')
-                if (self.indexes.getSpecial() == 1):
-                    self.indexes.setSpecial(2)
+        # Generate special character
+        elif t == 3 and (opt.special in range(1, 3)):
+            password.append(characters_special[random.randint(0, len(characters_special) - 1)])
+            print('Special character')
+            if (opt.special == 1):
+                includeList[3] = 2
+        """
+        else:  # debug
+            i += 1
+            if (i >= 10):
+                break
+        """
 
-            else:  # debug
-                i += 1
-                if (i >= 10):
-                    break
+    return 'Error! :)'
 
-        return ('Error! :)')
+def checkPassword(self, password, indexes):
+    print(f'\nChecking password:')
 
-    def checkPassword(password, indexes):
-        print(f'\nChecking password:')
+    usedIndexes = []  # ADD THIS IN USE
 
-        usedIndexes = []  # ADD THIS IN USE
+    # Check and fix lowercase characters
+    if (indexes.getLower() == 0):
+        print(f'Lowercase characters not used.')
 
-        # Check and fix lowercase characters
-        if (indexes.getLower() == 0):
-            print(f'Lowercase characters not used.')
+    elif (indexes.getLower() == 1):
+        i = random.randint(0, len(password) - 1)
+        password.pop(i)
+        password.insert(i, characters_lower[random.randint(0, len(characters_lower) - 1)])
+        print(f'Lowercase character fixed for index: {i}')
 
-        elif (indexes.getLower() == 1):
-            i = random.randint(0, len(password) - 1)
-            password.pop(i)
-            password.insert(i, characters_lower[random.randint(0, len(characters_lower) - 1)])
-            print(f'Lowercase character fixed for index: {i}')
+    else:
+        print('Lowercase characters are ok.')
 
-        else:
-            print('Lowercase characters are ok.')
+    # Check and fix uppercase characters
+    if (indexes.getUpper() == 0):
+        print(f'Uppercase characters not used.')
 
-        # Check and fix uppercase characters
-        if (indexes.getUpper() == 0):
-            print(f'Uppercase characters not used.')
+    elif (indexes.getUpper() == 1):
+        i = random.randint(0, len(password) - 1)
+        password.pop(i)
+        password.insert(i, characters_upper[random.randint(0, len(characters_upper) - 1)])
+        print(f'Uppercase character fixed for index: {i}')
 
-        elif (indexes.getUpper() == 1):
-            i = random.randint(0, len(password) - 1)
-            password.pop(i)
-            password.insert(i, characters_upper[random.randint(0, len(characters_upper) - 1)])
-            print(f'Uppercase character fixed for index: {i}')
+    else:
+        print('Uppercase characters are ok.')
 
-        else:
-            print('Uppercase characters are ok.')
+    # Check and fix number characters
+    if (indexes.getNumber() == 0):
+        print(f'Numbers not used.')
 
-        # Check and fix number characters
-        if (indexes.getNumber() == 0):
-            print(f'Numbers not used.')
+    elif (indexes.getNumber() == 1):
+        i = random.randint(0, len(password) - 1)
+        password.pop(i)
+        password.insert(i, numbers[random.randint(0, len(characters_upper) - 1)])
+        print(f'Number character fixed for index: {i}')
 
-        elif (indexes.getNumber() == 1):
-            i = random.randint(0, len(password) - 1)
-            password.pop(i)
-            password.insert(i, numbers[random.randint(0, len(characters_upper) - 1)])
-            print(f'Number character fixed for index: {i}')
+    else:
+        print('Number characters are ok.')
 
-        else:
-            print('Number characters are ok.')
+    # Check and fix special characters
+    if (indexes.getSpecial() == 0):
+        print(f'Special characters not used.')
 
-        # Check and fix special characters
-        if (indexes.getSpecial() == 0):
-            print(f'Special characters not used.')
+    if (indexes.getSpecial() == 1):
+        i = random.randint(0, len(password) - 1)
+        password.pop(i)
+        password.insert(i, characters_special[random.randint(0, len(characters_upper) - 1)])
+        print(f'Special character fixed for index: {i}')
 
-        if (indexes.getSpecial() == 1):
-            i = random.randint(0, len(password) - 1)
-            password.pop(i)
-            password.insert(i, characters_special[random.randint(0, len(characters_upper) - 1)])
-            print(f'Special character fixed for index: {i}')
+    else:
+        print('Special characters are ok.')
 
-        else:
-            print('Special characters are ok.')
+    print(f'Password is now ok.')
 
-        print(f'Password is now ok.')
+    # password.printPassword(password)
+    psw_string = ''.join(password)
+    print(f"\nAnd here is your password: {psw_string}")
 
-        # password.printPassword(password)
-        emptystr = ""
-        for i in password:
-            print(i, end='')
-            emptystr += i + ''
+    return (psw_string)
 
-        return (emptystr)
-
-    def printPassword(pw):
-        print(f"\nAnd here is your password: ", end='')
-        emptystr = ""
-        for i in pw:
-            print(i, end='')
-            emptystr += i + ''
-
-        # ent_password.insert(0, f'{emptystr}')
 
 # eof
