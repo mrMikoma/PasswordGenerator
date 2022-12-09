@@ -2,10 +2,9 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import showerror
-import random
 import string
 import backEnd
-
+import settings
 
 # OPTIONSFRAME for different options
 class OptionsFrame(ttk.LabelFrame):
@@ -14,7 +13,7 @@ class OptionsFrame(ttk.LabelFrame):
         self['text'] = 'Options'
 
         # Initializing options
-        self.opt = backEnd.Options() #(lenght, lower, upper, number, special)
+        #self.opt = backEnd.Options() #(lenght, lower, upper, number, special)
 
         # Initializing check buttons
         self.selected_lower = tk.IntVar()
@@ -62,8 +61,8 @@ class OptionsFrame(ttk.LabelFrame):
         self.frames[0] = PasswordFrame(
             container,
             'Password lenght',
-            PasswordFrame.generate,
-            self.opt )
+            PasswordFrame.generate
+            )
 
         self.change_frame()
 
@@ -73,17 +72,16 @@ class OptionsFrame(ttk.LabelFrame):
         frame.tkraise()
 
     def save_options(self):
-        # Declaring variables
-        print(f'\nLOWER read: {self.selected_lower.get()}')  # debug
-        opt_new = backEnd.Options(self.opt.lenght,
-                                  self.selected_lower.get(),
-                                  self.selected_upper.get(),
-                                  self.selected_number.get(),
-                                  self.selected_special.get(),
-        )
-        self.opt = opt_new
+        # Declaring new settings
+        new_opt = {
+            "lower": self.selected_lower.get(),
+            "upper": self.selected_upper.get(),
+            "number": self.selected_number.get(),
+            "special": self.selected_special.get()
+            }
 
-        print(f'LOWER saved as: {self.opt.lower}')  # debug
+        # Saving new settings
+        settings.saveSettings(new_opt)
 
         self.change_frame()
 
@@ -93,7 +91,7 @@ class OptionsFrame(ttk.LabelFrame):
 
 # PASSWORDFRAME for password lenght and result
 class PasswordFrame(ttk.Frame):
-    def __init__(self, container, unit_from, converter, opt):
+    def __init__(self, container, unit_from, converter):
         super().__init__(container)
 
         self.unit_from = unit_from
@@ -115,7 +113,7 @@ class PasswordFrame(ttk.Frame):
         # generate_button
         self.generate_button = ttk.Button(self, text='\N{RIGHTWARDS BLACK ARROW}')
         self.generate_button.grid(column=2, row=0, sticky='w', **options)
-        self.generate_button.configure(command= lambda: self.generate(opt) )
+        self.generate_button.configure(command= lambda: self.generate() )
 
         # result_label
         self.result_label = ttk.Label(self)
@@ -124,36 +122,32 @@ class PasswordFrame(ttk.Frame):
         # add padding to the frame and show it
         self.grid(column=0, row=0, padx=5, pady=5, sticky="nsew")
 
-    def generate(self, opt):
+    def generate(self):
         print("\nGenerating password...") #debug
 
         # Check options
         try:
             # Get options
-            opt.lenght = int(self.temperature.get())
+            lenght = int(self.temperature.get())
 
-            print(f'Lenght is {opt.lenght}') # debug
-
-            print(f'LOWER: {opt.lower}') # debug
-
-            print(f'UPPER: {opt.upper}')  # debug
-
-            print(f'NUMBER: {opt.number}')  # debug
-
-            print(f'SPECIAL: {opt.special}')  # debug
+            opt = settings.readSettings()
+            print(opt)
 
             # Error handling
-            if (opt.lenght < 4):
+            if lenght < 4:
                 print(f'Password length is too short. Please, try again...')
                 showerror(title='Error', message='Password length is too short. Please, try again...')
-
+                return
+            """
             elif opt.lower != 1:
                 print(f'This password is not possible. Please, try again... :)))')
                 showerror(title='Error', message='This password is not possible. Please, try again... :)))')
+            """
 
-            else:
-                result = backEnd.generatePassword(opt)
-                self.result_label.config(text=result)
+            # ELSE
+            result = backEnd.generatePassword(opt, lenght)
+            self.result_label.config(text=result)
+
         except ValueError as error:
             showerror(title='Error', message=error)
 

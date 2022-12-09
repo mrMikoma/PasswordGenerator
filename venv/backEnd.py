@@ -2,8 +2,7 @@
 import random
 import string
 import frontEnd
-from dataclasses import dataclass
-from dataclasses import replace
+import settings
 
 
 # Declearing constant variable arrays
@@ -13,61 +12,48 @@ characters_upper = string.ascii_uppercase
 characters_special = string.punctuation
 
 
-@dataclass
-class Options:
-    lenght: int  = 16
-    lower: int  = 1
-    upper: int = 1
-    number: int = 1
-    special: int = 0
-
-
-def generatePassword(opt):
+def generatePassword(optDict, lenght):
     print("\nGenerating password...")
     password = []
-    includeList = [opt.lower,
-                   opt.upper,
-                   opt.number,
-                   opt.special]
     i = 0  # debug
 
     while True:
         # Randomize character type t
-        t = random.randint(0, opt.lenght - 1)
+        t = random.randint(0, lenght - 1)
 
         # Break loop if ready
-        if len(password) == opt.lenght:
-            # Check current password                # NOTICE and fix!
-            # checkPassword(password, indexed)      # NOTICE and fix!
+        if len(password) == lenght:
+            # Check current password                             # NOTICE and fix!
+            # password = checkPassword(password, indexed)        # NOTICE and fix!
             return password
 
         # Generate lowercase character
-        if t == 0 and (opt.lower in range(1, 3)):
+        if t == 0 and (optDict['lower'] in range(1, 3)):
             password.append(characters_lower[random.randint(0, len(characters_lower) - 1)])
             print('Lowercase character')
-            if (opt.lenght == 1):
-                includeList[0] = 2
+            if (optDict['lower'] == 1):
+                optDict['lower'] = 2
 
         # Generate uppercase character
-        elif t == 1 and (opt.upper in range(1, 3)):
+        elif t == 1 and (optDict['upper'] in range(1, 3)):
             password.append(characters_upper[random.randint(0, len(characters_upper) - 1)])
             print('Uppercase character')
-            if (opt.upper == 1):
-                includeList[1] = 2
+            if (optDict['upper'] == 1):
+                optDict['upper'] = 2
 
         # Generate number
-        elif t == 2 and (opt.number in range(1, 3)):
+        elif t == 2 and (optDict['number'] in range(1, 3)):
             password.append(numbers[random.randint(0, len(numbers) - 1)])
             print('Number')
-            if (opt.number == 1):
-                includeList[2] = 2
+            if (optDict['number'] == 1):
+                optDict['number'] = 2
 
         # Generate special character
-        elif t == 3 and (opt.special in range(1, 3)):
+        elif t == 3 and (optDict['special'] in range(1, 3)):
             password.append(characters_special[random.randint(0, len(characters_special) - 1)])
             print('Special character')
-            if (opt.special == 1):
-                includeList[3] = 2
+            if (optDict['special'] == 1):
+                optDict['special'] = 2
         """
         else:  # debug
             i += 1
@@ -77,7 +63,7 @@ def generatePassword(opt):
 
     return 'Error! :)'
 
-def checkPassword(self, password, indexes):
+def checkPassword(password, optDict):
     print(f'\nChecking password:')
 
     usedIndexes = []  # ADD THIS IN USE
