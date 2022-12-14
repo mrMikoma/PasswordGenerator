@@ -5,7 +5,7 @@ import frontEnd
 import settings
 
 
-# Declearing constant variable arrays
+# Declearing constant variable arrays for different characters
 numbers = string.digits  # range(10)
 characters_lower = string.ascii_lowercase
 characters_upper = string.ascii_uppercase
@@ -15,7 +15,6 @@ characters_special = string.punctuation
 def generatePassword(optDict, lenght):
     print("\nGenerating password...")
     password = []
-    i = 0  # debug
 
     while True:
         # Randomize character type t
@@ -23,8 +22,8 @@ def generatePassword(optDict, lenght):
 
         # Break loop if ready
         if len(password) == lenght:
-            # Check current password                             # NOTICE and fix!
-            # password = checkPassword(password, indexed)        # NOTICE and fix!
+            # Check current password
+            password = checkPassword(password, optDict, lenght)
             return ''.join(password)
 
         # Generate lowercase character
@@ -54,79 +53,68 @@ def generatePassword(optDict, lenght):
             print('Special character')
             if (optDict['special'] == 1):
                 optDict['special'] = 2
-        """
-        else:  # debug
-            i += 1
-            if (i >= 10):
-                break
-        """
 
     return 'Error! :)'
 
-def checkPassword(password, optDict):
+def checkPassword(password, optDict, lenght):
     print(f'\nChecking password:')
 
-    usedIndexes = []  # ADD THIS IN USE
+    # Fail-safe for including all asked character types
+    usedIndexes = []                                        # ADD THIS IN USE
 
     # Check and fix lowercase characters
-    if (indexes.getLower() == 0):
+    if (optDict['lower'] == 0):
         print(f'Lowercase characters not used.')
 
-    elif (indexes.getLower() == 1):
+    elif (optDict['lower'] == 1):
         i = random.randint(0, len(password) - 1)
         password.pop(i)
         password.insert(i, characters_lower[random.randint(0, len(characters_lower) - 1)])
-        print(f'Lowercase character fixed for index: {i}')
+        print(f'Lowercase character fixed in index: {i}')
 
     else:
         print('Lowercase characters are ok.')
 
     # Check and fix uppercase characters
-    if (indexes.getUpper() == 0):
+    if (optDict['upper'] == 0):
         print(f'Uppercase characters not used.')
 
-    elif (indexes.getUpper() == 1):
+    elif (optDict['upper'] == 1):
         i = random.randint(0, len(password) - 1)
         password.pop(i)
         password.insert(i, characters_upper[random.randint(0, len(characters_upper) - 1)])
-        print(f'Uppercase character fixed for index: {i}')
+        print(f'Uppercase character fixed in index: {i}')
 
     else:
         print('Uppercase characters are ok.')
 
     # Check and fix number characters
-    if (indexes.getNumber() == 0):
+    if (optDict['number'] == 0):
         print(f'Numbers not used.')
 
-    elif (indexes.getNumber() == 1):
+    elif (optDict['number'] == 1):
         i = random.randint(0, len(password) - 1)
         password.pop(i)
         password.insert(i, numbers[random.randint(0, len(characters_upper) - 1)])
-        print(f'Number character fixed for index: {i}')
+        print(f'Number character fixed in index: {i}')
 
     else:
         print('Number characters are ok.')
 
     # Check and fix special characters
-    if (indexes.getSpecial() == 0):
+    if (optDict['special'] == 0):
         print(f'Special characters not used.')
 
-    if (indexes.getSpecial() == 1):
+    elif (optDict['special'] == 1):
         i = random.randint(0, len(password) - 1)
         password.pop(i)
         password.insert(i, characters_special[random.randint(0, len(characters_upper) - 1)])
-        print(f'Special character fixed for index: {i}')
+        print(f'Special character fixed in index: {i}')
 
     else:
         print('Special characters are ok.')
 
-    print(f'Password is now ok.')
-
-    # password.printPassword(password)
-    psw_string = ''.join(password)
-    print(f"\nAnd here is your password: {psw_string}")
-
-    return (psw_string)
-
+    print(f'\nPassword is now ok.')
+    return password
 
 # eof

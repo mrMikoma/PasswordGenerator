@@ -27,7 +27,6 @@ def createJSON():
 
     # Create new file with default settings
     saveSettings(defaultSettings)
-
     return
 
 

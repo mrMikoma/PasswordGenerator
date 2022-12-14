@@ -12,7 +12,10 @@ class OptionsFrame(ttk.LabelFrame):
         super().__init__(container)
         self['text'] = 'Options'
 
-        # Initializing check buttons
+        # Get saved options from settings file
+        opt = settings.readSettings()
+
+        # Initializing check button variables
         self.selected_lower = tk.IntVar()
         self.selected_upper = tk.IntVar()
         self.selected_number = tk.IntVar()
@@ -53,6 +56,12 @@ class OptionsFrame(ttk.LabelFrame):
         self.save_button.grid(column=0, row=1, sticky='ew')
         self.save_button.configure(command= lambda: self.save_options() )
 
+        # Initialize correct options
+        self.selected_lower.set(opt['lower'])
+        self.selected_upper.set(opt['upper'])
+        self.selected_number.set(opt['number'])
+        self.selected_special.set(opt['special'])
+
         # Initialize frames
         self.frames = {}
         self.frames[0] = PasswordFrame(
@@ -80,7 +89,7 @@ class OptionsFrame(ttk.LabelFrame):
         # Saving new settings
         settings.saveSettings(new_opt)
 
-        self.change_frame()
+        #self.change_frame()
 
         print(f'\nOptions saved successfully!\n')
 
@@ -131,27 +140,28 @@ class PasswordFrame(ttk.Frame):
 
         # Check options
         try:
-            # Get options
+            # Get password lenght
             lenght = int(self.temperature.get())
 
+            # Get character options
             opt = settings.readSettings()
-            print(opt)
+            print(opt)      # debug
 
-            # Error handling
+            # Error handling for too short password
             if lenght < 4:
                 print(f'Password length is too short. Please, try again...')
                 showerror(title='Error', message='Password length is too short. Please, try again...')
                 return
-            """
-            elif opt.lower != 1:
-                print(f'This password is not possible. Please, try again... :)))')
-                showerror(title='Error', message='This password is not possible. Please, try again... :)))')
-            """
 
-            # ELSE
-            result = backEnd.generatePassword(opt, lenght)
-            self.eText.set(result)
-                #.config(text=result)
+            # Error handling for not suitable character options
+            elif opt['lower'] == 0 and opt['upper'] == 0 and opt['number'] == 0 and opt['special'] == 0:
+                print(f'This password is not possible. Please, try again...')
+                showerror(title='Error', message='This password is not possible. Please, try again...')
+                return
+
+            else:
+                result = backEnd.generatePassword(opt, lenght)
+                self.eText.set(result)
 
         except ValueError as error:
             showerror(title='Error', message=error)

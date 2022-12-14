@@ -13,7 +13,7 @@ from frontEnd import OptionsFrame
 
 """
 Improvement ideas:
-- FIX ALL :)
+- :)
 -
 """
 
@@ -21,7 +21,6 @@ Improvement ideas:
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-
         self.title(f'Password Generator')
         self.geometry('355x165')
         self.resizable(False, False)
