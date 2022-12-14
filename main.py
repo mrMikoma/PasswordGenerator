@@ -23,7 +23,7 @@ class App(tk.Tk):
         super().__init__()
 
         self.title(f'Password Generator')
-        self.geometry('350x140')
+        self.geometry('355x165')
         self.resizable(False, False)
 
 # MAIN

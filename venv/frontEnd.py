@@ -12,9 +12,6 @@ class OptionsFrame(ttk.LabelFrame):
         super().__init__(container)
         self['text'] = 'Options'
 
-        # Initializing options
-        #self.opt = backEnd.Options() #(lenght, lower, upper, number, special)
-
         # Initializing check buttons
         self.selected_lower = tk.IntVar()
         self.selected_upper = tk.IntVar()
@@ -104,20 +101,27 @@ class PasswordFrame(ttk.Frame):
         self.temperature_label = ttk.Label(self, text=self.unit_from)
         self.temperature_label.grid(column=0, row=0, sticky='w',  **options)
 
-        # temperature entry
+        # lenght entry
         self.temperature = tk.StringVar()
         self.temperature_entry = ttk.Entry(self, textvariable=self.temperature)
-        self.temperature_entry.grid(column=1, row=0, sticky='w', **options)
+        self.temperature_entry.grid(column=0, row=1, sticky='w', **options)
         self.temperature_entry.focus()
 
         # generate_button
         self.generate_button = ttk.Button(self, text='\N{RIGHTWARDS BLACK ARROW}')
-        self.generate_button.grid(column=2, row=0, sticky='w', **options)
+        self.generate_button.grid(column=1, row=1, sticky='w', **options)
         self.generate_button.configure(command= lambda: self.generate() )
 
-        # result_label
-        self.result_label = ttk.Label(self)
-        self.result_label.grid(row=1, columnspan=3, **options)
+        # result_entry
+        self.result_entry = tk.Entry(self, width=36)
+        self.eText = tk.StringVar()
+        self.result_entry.grid(column=0, row=2, sticky='w', **options) # row=1, columnspan=2, **options
+        self.result_entry.configure(state="readonly", textvariable=self.eText)
+
+        # clipboard copy_button
+        self.copy_button = ttk.Button(self, text='Copy')
+        self.copy_button.grid(column=1, row=2, sticky='w', **options)
+        self.copy_button.configure(command=lambda: self.copyClipboard())
 
         # add padding to the frame and show it
         self.grid(column=0, row=0, padx=5, pady=5, sticky="nsew")
@@ -146,13 +150,18 @@ class PasswordFrame(ttk.Frame):
 
             # ELSE
             result = backEnd.generatePassword(opt, lenght)
-            self.result_label.config(text=result)
+            self.eText.set(result)
+                #.config(text=result)
 
         except ValueError as error:
             showerror(title='Error', message=error)
 
+    def copyClipboard(self):
+        self.clipboard_clear()
+        self.clipboard_append(self.eText.get())
+
     def reset(self):
         self.temperature_entry.delete(0, "end")
-        self.result_label.text = ''
+        self.result_entry.insert(0, '')
 
 # eof

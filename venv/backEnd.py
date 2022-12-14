@@ -25,7 +25,7 @@ def generatePassword(optDict, lenght):
         if len(password) == lenght:
             # Check current password                             # NOTICE and fix!
             # password = checkPassword(password, indexed)        # NOTICE and fix!
-            return password
+            return ''.join(password)
 
         # Generate lowercase character
         if t == 0 and (optDict['lower'] in range(1, 3)):
